@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title> The Javascript Consistent Object Framework </title>
+    <script src="helpers.js"/> 
+    <script src='showdown.js'/>
+    <script src='cof.js'/>
+  </head>
+  <body>
+
+    <style> 
+/*       body { font-family: Helvetica; } */
+      .abstract { font-style: italic; padding-left: 5em; padding-right: 5em; display:block;}
+      code { padding: .5em; font-weight: bold; margin-left: 2em; display: block; border: 1px solid blue; background-color: #DDF;}
+      code.fail { border: 1px solid red; background-color: #FAA; }
+      code.exception { border: 5px solid blue; }
+      div.exception { border: 2px solid red; background-color: white; padding: 1em; margin-top: .5em; }
+
+      code.pass {
+        -webkit-animation-name: pass; 
+        -webkit-animation-duration: 1s;
+        -webkit-animation-iteration-count: 1;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-out;
+      }
+
+
+ @-webkit-keyframes pass {
+    0%  { border: 1px solid green; background-color: #AFA; }
+    100%     { border: 1px solid black; background-color: none; }
+  }
+
+
+    </style>
+
+<h1>A Consistent Object System for Javascript</h1>
+<h2> Update </h2>
+<p>
+
+Note: There were some problems with constructing objects from anonymous functions. But using explicit declares is OK because they have no side effects outside the current scope.
+<br/>
+Chrome inspector uses V8 inspection(!) to display the name of functions 
+
+
+
+
+
+</p>
+
+
+<h2>Abstract</h2>
+
+<source class="abstract"><![CDATA[
+
+Developing larger object oriented programs with Javascript is often difficult for two reasons. First, it has an inconsistent object system which hinders encapsulation. Second, it has no good syntactic support for declaring objects in a concise way. These traits impose cognitive overhead when dealing with object oriented systems implemented in Javascript. Fortunately, Javascript is so dynamic that they can be rectified.
+
+In this dynamic paper, I used a literate programming approach to work out, document, implement and test a simple object system that should allow Javascript programs to be developed with the same ease as Ruby programs.
+
+]]></source>
+
+<source><![CDATA[
+
+- Inheritance
+- Inspection
+- Identity
+- Encapsulation
+- Enhancement
+- consistency across native & own types
+
+
+## Inheritance & Traits
+
+We have no classes. But we have so-called **ClassObject**s that are used by other objects to
+ 
+1. re-use its methods and fields
+2. identify that they belong to its category
+
+So:
+
+    Object.new(ClassObject, "Seaman", {greeting: "Ahoy"})
+    Object.new(Seaman, "sam", {})
+    sam.greeting === "Ahoy"
+
+And:
+
+    sam.classObject() === Seaman
+
+And:
+
+    sam.isA( Seaman )
+
+
+This works for prototype chains as well:
+
+    Object.new(Seaman, "Pirate", {greeting: "Enter!"})
+    Object.new(Pirate, "sid", {})
+    sid.isA( Pirate ) && sid.isA( Seaman )
+
+
+Instance objects share the class object, but are otherwise individual:
+
+    Object.new( Seaman, "aaron", {rum: 2})
+    aaron.isA(sam.classObject()) && aaron.rum === 2
+
+And:
+
+    !(sam.rum)
+
+
+
+We can change the ClassObject of an existing object. This especially useful when the new ClassObject itself is an instance of the old class object. In that way we can make objects inherit from other objects even without access to the constructor.
+
+    Object.new( HTMLElement, "UIWidget", {scroll: "noop"}); true
+    widget = document.createElement("div")
+    widget.becomeA( UIWidget )
+    widget.style && widget.scroll // both are defined
+
+At the moment, there is no trait/multiple inheritance support. Also, typechecks do not work consistently with DOM objects; maybe they will when the prototype chains are traversed...
+
+    div = document.createElement("div")
+    div.isA( HTMLDivElement )
+   
+
+## Inspection
+
+Classes know their name...
+
+Note: currently names of both classes and objects are side effects. Good when classes should know their name, bad for much else...
+
+    Object.new( ClassObject, "AClass", {data: 5, }
+
+
+
+
+inspect current state:
+
+
+show methods
+
+
+
+
+
+
+
+    ]]></source>
+
+    <script><![CDATA[
+      var renderMarkdown = function() {
+
+        var showdown = new Showdown.converter();
+
+        var sources = document.getElementsByTagName("source");
+        sources.forEach( function(src) {
+          var t = src.textContent;
+          var html = showdown.makeHtml(t);
+          src.innerHTML = html;
+        }) 
+      }
+
+      var testCodeExamples = function() {
+        var examples = document.getElementsByTagName("code");
+          examples.forEach( function(ex) {
+          var code = ex.textContent;
+          try {
+            var outcome = eval(code);
+          }
+          catch(e) {
+            ex.setAttribute("class", "exception");
+            l(e)
+            ex.appendChild(Node("div", {class: "exception"}, [e.toString(), ". Sorry, try REPL ..."] ))
+            l(code);
+          }
+          ex.setAttribute("class", (outcome) ? "pass": "fail")
+        })
+      };
+
+      renderMarkdown();
+      testCodeExamples();
+
+
+    ]]></script>
+
+  </body>
+</html>
