@@ -7,7 +7,45 @@
     <script src='coffee-script.js'/>
     <coffee-script><![CDATA[
 
+      Function.prototype.args = ->
+        '''
+          String representation of arguments for this function.
+        '''
+        @toString().match( /\(([^)]*)\)/ )[1]
+
+
+      Function.prototype.doc_string = ->
+        '''
+          Raw doc string for this function or null if does not exists.
+        '''
+        matches = @toString().match( /^function\s+\w*\([^)]*\)\s+{\s+('(?:[^']|\\.)*');/ )
+        matches and eval matches[1]
+
+
+      Function.prototype.return_type = ->
+        '''
+          The return type for this function or null if unknown.
+        '''
+        null
+
+
       class @DocumentedObject
+
+        doc_string: ->
+          '''
+            Hello, Object!
+          '''
+
+        constructor: ->
+          '''
+            Hello, Class!
+          '''
+
+        class: ->
+          @constructor.name
+
+
+       class @Foo << DocumentedObject
 
     ]]></coffee-script>
   </head>
@@ -150,7 +188,7 @@ Raw Data:
           examples.forEach( function(ex) {
           var code = ex.textContent;
           try {
-            var outcome = eval(code);
+            var outcome = CoffeeScript.eval(code);
           }
           catch(e) {
             ex.setAttribute("class", "exception");
