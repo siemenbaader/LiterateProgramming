@@ -4,7 +4,12 @@
     <title> The Javascript Consistent Object Framework </title>
     <script src="helpers.js"/> 
     <script src='showdown.js'/>
-    <script src='cof.js'/>
+    <script src='coffee-script.js'/>
+    <coffee-script><![CDATA[
+
+      class @DocumentedObject
+
+    ]]></coffee-script>
   </head>
   <body>
 
@@ -36,7 +41,6 @@
 #Dynamic Inspection and On-Line API Documentation for JavaScript
 #### Bjarke Walling <bwp@bwp.dk> and Siemen Baader <siemenbaader@gmail.com>
 ]]></source>
-
 <source class="abstract"><![CDATA[
 Interactive consoles - or Read Eval Print Loops (REPLs) - are a central in software development with dynamic languages. They allow programmers to rapidly interact with objects and functions and learn how they behave. REPLs are used to quickly explore new ideas, as well as for debugging.
 
@@ -48,90 +52,7 @@ In this dynamic paper, we have made use of a Literate Programming approach to de
 
 <source><![CDATA[
 
-- Inheritance
-- Inspection
-- Identity
-- Encapsulation
-- Enhancement
-- consistency across native & own types
-
-
-## Inheritance & Traits
-
-We have no classes. But we have so-called **ClassObject**s that are used by other objects to
- 
-1. re-use its methods and fields
-2. identify that they belong to its category
-
-So:
-
-    Object.new(ClassObject, "Seaman", {greeting: "Ahoy"})
-    Object.new(Seaman, "sam", {})
-    sam.greeting === "Ahoy"
-
-And:
-
-    sam.classObject() === Seaman
-
-And:
-
-    sam.isA( Seaman )
-
-
-This works for prototype chains as well:
-
-    Object.new(Seaman, "Pirate", {greeting: "Enter!"})
-    Object.new(Pirate, "sid", {})
-    sid.isA( Pirate ) && sid.isA( Seaman )
-
-
-Instance objects share the class object, but are otherwise individual:
-
-    Object.new( Seaman, "aaron", {rum: 2})
-    aaron.isA(sam.classObject()) && aaron.rum === 2
-
-And:
-
-    !(sam.rum)
-
-
-
-We can change the ClassObject of an existing object. This especially useful when the new ClassObject itself is an instance of the old class object. In that way we can make objects inherit from other objects even without access to the constructor.
-
-    Object.new( HTMLElement, "UIWidget", {scroll: "noop"}); true
-    widget = document.createElement("div")
-    widget.becomeA( UIWidget )
-    widget.style && widget.scroll // both are defined
-
-At the moment, there is no trait/multiple inheritance support. Also, typechecks do not work consistently with DOM objects; maybe they will when the prototype chains are traversed...
-
-    div = document.createElement("div")
-    div.isA( HTMLDivElement )
-   
-
-## Inspection
-
-Classes know their name...
-
-Note: currently names of both classes and objects are side effects. Good when classes should know their name, bad for much else...
-
-    Object.new( ClassObject, "AClass", {data: 5, }
-
-
-
-
-inspect current state:
-
-
-show methods
-
-
-
-
-
-
-
-    ]]></source>
+]]></source>
 
     <script><![CDATA[
       var renderMarkdown = function() {
@@ -163,6 +84,14 @@ show methods
         })
       };
 
+      var loadCoffeeScripts = function() {
+        var scripts = document.getElementsByTagName("coffee-script");
+        scripts.forEach( function(script) {
+          CoffeeScript.run(script.textContent);
+        });
+      };
+
+      loadCoffeeScripts();
       renderMarkdown();
       testCodeExamples();
 
