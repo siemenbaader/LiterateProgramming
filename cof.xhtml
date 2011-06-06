@@ -53,6 +53,83 @@ In this dynamic paper, we have made use of a Literate Programming approach to de
 
 <source><![CDATA[
 
+Outline
+-------
+
+
+* functions
+  - docstring
+  - signature & type
+  - return type
+  - args string
+  
+* object inspection
+  - irb: fields.
+  - closure-bound... : @inspections[]
+
+* return types and callbacks
+
+
+* sugar
+  - documented object
+  - neat syntax / 
+  
+* graceful callbacks
+
+Functions
+---------
+Raw Data:
+
+
+    Existing:
+      node: > require
+    { [Function: require]
+      resolve: [Function],
+      paths: 
+      [ '/home/siemen/.node_modules',
+        '/home/siemen/.node_libraries',
+        '/usr/local/lib/node' ],
+      main: undefined,
+      extensions: { '.js': [Function], '.node': [Function] },
+      registerExtension: [Function],
+      cache: {} }
+    > require.toString()
+    'function require(path) {\n    return Module._load(path, self);\n  }'
+    > 
+    chrome: alert
+    function alert() { [native code] }
+    get
+    function get(url) {
+      return blocking_ajax_request(url, "get");
+    }
+
+    ruby:
+    >> a = lambda {|i| i * 9}
+    => #<Proc:0xb76a32d8@(irb):1>
+
+    >> Foo.new.methods
+    => ["to_yaml", "taguri", "inspect", "tap", "clone", "poc", "taguri=", "public_methods", "__send__", "object_id", "instance_variable_defined?", "equal?", "freeze", "extend", "send", "methods", "to_yaml_style", "hash", "dup", "to_enum", "instance_variables", "eql?", "instance_eval", "id", "singleton_methods", "taint", "ri", "ar", "enum_for", "frozen?", "instance_variable_get", "instance_of?", "display", "to_a", "method", "pretty_print_inspect", "type", "instance_exec", "protected_methods", "==", "===", "instance_variable_set", "kind_of?", "respond_to?", "pretty_print_cycle", "to_s", "class", "po", "private_methods", "=~", "tainted?", "__id__", "untaint", "nil?", "pretty_print_instance_variables", "to_yaml_properties", "pretty_inspect", "is_a?", "pretty_print"]
+    >> Foo.new.inspect
+    => "#<Foo:0xb7612f1c>"
+
+
+
+#important:
+
+- arguments: names, types, arity, splat
+- doc
+- return types & callback signatures
+
+
+  
+
+
+]]></source>
+
+
+
+<source><![CDATA[
+
 ]]></source>
 
     <script><![CDATA[
