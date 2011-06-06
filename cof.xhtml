@@ -9,7 +9,7 @@
 
       Function.prototype.args = ->
         '''
-          List of arguments for this function.
+          String representation of arguments for this function.
         '''
         @toString().match( /\(([^)]*)\)/ )[1]
 
