@@ -52,7 +52,7 @@
   <body>
 
     <style> 
-/*       body { font-family: Helvetica; } */
+      body { font-family: Helvetica; }
       .abstract { font-style: italic; padding-left: 5em; padding-right: 5em; display:block;}
       code { padding: .5em; font-weight: bold; margin-left: 2em; display: block; border: 1px solid blue; background-color: #DDF;}
       code.fail { border: 1px solid red; background-color: #FAA; }
@@ -75,17 +75,17 @@
 
 
     </style>
-
-<h1>A Consistent Object System for Javascript</h1>
-
-<h2>Abstract</h2>
+<source><![CDATA[
+#Dynamic Inspection and On-Line API Documentation for JavaScript
+#### Bjarke Walling <bwp@bwp.dk> and Siemen Baader <siemenbaader@gmail.com>
+]]></source>
 
 <source class="abstract"><![CDATA[
-CHANGED
+Interactive consoles - or Read Eval Print Loops (REPLs) - are a central in software development with dynamic languages. They allow programmers to rapidly interact with objects and functions and learn how they behave. REPLs are used to quickly explore new ideas, as well as for debugging.
 
-Developing larger object oriented programs with Javascript is often difficult for two reasons. First, it has an inconsistent object system which hinders encapsulation. Second, it has no good syntactic support for declaring objects in a concise way. These traits impose cognitive overhead when dealing with object oriented systems implemented in Javascript. Fortunately, Javascript is so dynamic that they can be rectified.
+The Ruby REPL provides a powerful and concise view to inspect objects and their fields. Likewise, Python's REPL allows access to API documentation as direct properties of objects. These are important usability features for this way of programming, because these aspects are important information for reasoning about the objects under concern. Providing them in-situ, in the REPL, allows the programmer very direct access to them and reduces the need to use inspection tools or external documentation. Unfortunately, the JavaScript runtimes today do not provide this livel of inspection and on-line documentation.
 
-In this dynamic paper, I used a literate programming approach to work out, document, implement and test a simple object system that should allow Javascript programs to be developed with the same ease as Ruby programs.
+In this dynamic paper, we have made use of a Literate Programming approach to develop an inspection framework for JavaScript. The framework allows dynamic inspection, and access to API documentation. 
 
 ]]></source>
 
