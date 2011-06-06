@@ -4,8 +4,12 @@
     <title> The Javascript Consistent Object Framework </title>
     <script src="helpers.js"/> 
     <script src='showdown.js'/>
-    <script src='cof.coffee' type='text/coffeescript'/>
     <script src='coffee-script.js'/>
+    <coffee-script><![CDATA[
+
+      class @DocumentedObject
+
+    ]]></coffee-script>
   </head>
   <body>
 
@@ -81,6 +85,14 @@ In this dynamic paper, I used a literate programming approach to work out, docum
         })
       };
 
+      var loadCoffeeScripts = function() {
+        var scripts = document.getElementsByTagName("coffee-script");
+        scripts.forEach( function(script) {
+          CoffeeScript.run(script.textContent);
+        });
+      };
+
+      loadCoffeeScripts();
       renderMarkdown();
       testCodeExamples();
 
