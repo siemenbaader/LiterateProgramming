@@ -111,7 +111,7 @@ In this dynamic paper, we have made use of a Literate Programming approach to de
           examples.forEach( function(ex) {
           var code = ex.textContent;
           try {
-            var outcome = eval(code);
+            var outcome = CoffeeScript.eval(code);
           }
           catch(e) {
             ex.setAttribute("class", "exception");

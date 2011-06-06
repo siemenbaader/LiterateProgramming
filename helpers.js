@@ -119,7 +119,7 @@ var DocumentFragment = function ( list ) {
   return d;
 }
 
-
+/*
 Object.defineProperty(Object.prototype, 'class', {value: function() {
   return Object.prototype.toString.call(this).match(/\ (.*)]/)[1]
 }})
@@ -127,7 +127,7 @@ Object.defineProperty(Object.prototype, 'class', {value: function() {
 Object.defineProperty(Object.prototype, 'is_a', {value: function( type_name ) {
   return this.class() === type_name;
 }})
-
+*/
 
 HTMLElement.prototype.append = function(element) { this.appendChild( element ) }
 
