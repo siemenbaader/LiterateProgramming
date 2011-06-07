@@ -45,7 +45,7 @@
           @constructor.name
 
 
-       class @Foo << DocumentedObject
+       class @Foo extends DocumentedObject
 
     ]]></coffee-script>
   </head>
@@ -54,26 +54,12 @@
     <style> 
       body { font-family: Helvetica; }
       .abstract { font-style: italic; padding-left: 5em; padding-right: 5em; display:block;}
-      code { padding: .5em; font-weight: bold; margin-left: 2em; display: block; border: 1px solid blue; background-color: #DDF;}
+      code { padding: .5em; font-weight: bold; margin-left: 2em; display: block; border: 1px solid #ccc; background-color: #eee; white-space: pre-wrap; }
+      code[type] { border: 1px solid blue; background-color: #DDF; -webkit-transition: border-color 1s ease-out, background-color 1s ease-out; }
+      code.pass { border: 1px solid green; background-color: #AFA; }
       code.fail { border: 1px solid red; background-color: #FAA; }
-      code.exception { border: 5px solid blue; }
+      code.exception { border: 5px solid red; background-color: #FAA; }
       div.exception { border: 2px solid red; background-color: white; padding: 1em; margin-top: .5em; }
-
-      code.pass {
-        -webkit-animation-name: pass; 
-        -webkit-animation-duration: 1s;
-        -webkit-animation-iteration-count: 1;
-        -webkit-animation-direction: alternate;
-        -webkit-animation-timing-function: ease-out;
-      }
-
-
- @-webkit-keyframes pass {
-    0%  { border: 1px solid green; background-color: #AFA; }
-    100%     { border: 1px solid black; background-color: none; }
-  }
-
-
     </style>
 <source><![CDATA[
 #Dynamic Inspection and On-Line API Documentation for JavaScript
@@ -159,16 +145,13 @@ Raw Data:
 - return types & callback signatures
 
 
-  
+<code type='text/coffeescript'>
+((a, b) -> a + b).args() == 'a, b'
+</code>
 
 
 ]]></source>
 
-
-
-<source><![CDATA[
-
-]]></source>
 
     <script><![CDATA[
       var renderMarkdown = function() {
@@ -179,24 +162,30 @@ Raw Data:
         sources.forEach( function(src) {
           var t = src.textContent;
           var html = showdown.makeHtml(t);
+
+          // Remove first empty line of code blocks.
+          html = html.replace( /(<code[^>]*>)\n/ , "$1");
+
           src.innerHTML = html;
         }) 
       }
 
       var testCodeExamples = function() {
         var examples = document.getElementsByTagName("code");
-          examples.forEach( function(ex) {
+        examples.forEach( function(ex) {
           var code = ex.textContent;
-          try {
-            var outcome = CoffeeScript.eval(code);
+          if (ex.getAttribute('type') === 'text/coffeescript') {
+            try {
+              var outcome = CoffeeScript.eval(code, {bare: 'on'});
+            }
+            catch(e) {
+              ex.setAttribute("class", "exception");
+              l(e)
+              ex.appendChild(Node("div", {class: "exception"}, [e.toString(), ". Sorry, try REPL ..."] ))
+              l(code);
+            }
+            ex.setAttribute("class", (outcome) ? "pass": "fail")
           }
-          catch(e) {
-            ex.setAttribute("class", "exception");
-            l(e)
-            ex.appendChild(Node("div", {class: "exception"}, [e.toString(), ". Sorry, try REPL ..."] ))
-            l(code);
-          }
-          ex.setAttribute("class", (outcome) ? "pass": "fail")
         })
       };
 
