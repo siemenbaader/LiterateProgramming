@@ -203,64 +203,28 @@ Chrome always tries to show the source of functions:
     }
 
 
-## Our Proposal
+## A Dynamic Inspection and Documentation Framework
+
+We propose including inspection and in-situ documentation in JavaScript. Our proposal adresses functions, as beeing the most needy, first.
+
+Our propsal consists of
+
+* **eMmber functions**
+  * to inform about properties of functions, such as arity, argument and return types
+* **Docstrings**
+  * The first declared string in a function holds plain-text API documentation
+* ** A voluntary augmenting type system**
+  * The docstring can optionally hold type information that is then included in the documentation, and accessible at run-time (however, it cannot be used for complier-based type checking)
 
 
-Outline
--------
+Currently, the proposal does *not* address variable length argument lists (splats).
+
+As much JavaScript programming is conducted in the Continuation Passing Style, return types from synchronous functions are similar in purpose to callback signature types of asynchronous functions. We plan on integrating these in the future.
+
+Another effect of the widespread use of the continuation-passing style (CPS) is that much important state is kept solely in closures. Ruby's **Object#inspect** lists the content of (private) fields, because it helps programmers reason about how a program will behave. With CPS, the role of fields is being taken over by closures, which cannot easily be inspected in JavaScript. We plan on finding a model to deal with this, making this important state inspectable. One option is to provide an explicit *closure* property on functions, and to let programmers manually assign important variables to it when needed for inspection.
 
 
-* functions
-  - docstring
-  - signature & type
-  - return type
-  - args string
-  
-* object inspection
-  - irb: fields.
-  - closure-bound... : @inspections[]
-
-* return types and callbacks
-
-
-* sugar
-  - documented object
-  - neat syntax / 
-  
-* graceful fallbacks
-
-Functions
----------
-Raw Data:
-
-
-    Existing:
-      node: > require
-    { [Function: require]
-      resolve: [Function],
-      paths: 
-      [ '/home/siemen/.node_modules',
-        '/home/siemen/.node_libraries',
-        '/usr/local/lib/node' ],
-      main: undefined,
-      extensions: { '.js': [Function], '.node': [Function] },
-      registerExtension: [Function],
-      cache: {} }
-    > require.toString()
-    'function require(path) {\n    return Module._load(path, self);\n  }'
-    > 
-    chrome: alert
-    function alert() { [native code] }
-    get
-    function get(url) {
-      return blocking_ajax_request(url, "get");
-    }
-
-
-- arguments: names, types, arity, splat
-- doc
-- return types & callback signatures
-
+Finally, object inspection is not addressed as the current inspection capabilities / JSON are reasonable. 
 
 
 CoffeeScript implementation
@@ -363,13 +327,6 @@ Math.sqrt.inspect() == '''
     Square root of a number. If value is a negative number, NaN is returned.
 '''
 </code>
-
-
-### Limitations
-* callback signatures
-* object inspection
-* Dom inspection
-* closure vars
 
 
 ]]></source>
