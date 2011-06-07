@@ -7,26 +7,70 @@
     <script src='coffee-script.js'/>
     <coffee-script><![CDATA[
 
+      Function.prototype.raw_doc = ->
+        '''
+          Raw doc string for this function or null if does not exists.
+        '''
+        matches = @toString().match /^function\s+\w*\([^)]*\)\s+{\s+('(?:[^']|\\.)*');/
+        matches and (eval matches[1]).replace /\r\n?/g, '\n'
+
+
+      Function.prototype.doc_signature = ->
+        '''
+          Signature declared in the doc string of this function or null.
+        '''
+        (@raw_doc() or '').match /^[ \t]*(?:\((.*)\))?[ \t]*->(.*)(?:\n|$)/
+
+
+      Function.prototype.doc = ->
+        '''
+          Documentation for this function or null if does not exists.
+        '''
+        doc = @raw_doc()
+        return null unless doc
+        doc = doc.replace /^.+(?:\n|$)/ , '' if @doc_signature()?
+        doc = doc.replace /^(?:[ \t]*\n)*/ , ''  # Trim empty lines in beginning
+        doc = doc.replace /(?:\n[ \t]*)*$/ , ''  # Trim empty lines in end
+        return doc
+
+
       Function.prototype.args = ->
         '''
           String representation of arguments for this function.
         '''
-        @toString().match( /\(([^)]*)\)/ )[1]
-
-
-      Function.prototype.doc_string = ->
-        '''
-          Raw doc string for this function or null if does not exists.
-        '''
-        matches = @toString().match( /^function\s+\w*\([^)]*\)\s+{\s+('(?:[^']|\\.)*');/ )
-        matches and eval matches[1]
+        signature = @doc_signature()
+        if signature? and signature[1]?
+          signature[1]
+        else
+          @toString().match( /\(([^)]*)\)/ )[1]
 
 
       Function.prototype.return_type = ->
         '''
-          The return type for this function or null if unknown.
+          The return type for this function or null if unknown. Default null.
         '''
-        null
+        signature = @doc_signature()
+        if signature?
+          type = signature[2].trim()
+          return type if type
+        return null
+
+
+      Function.prototype.inspect = ->
+        '''
+          Inspects a function.
+        '''
+        text = "(#{ @args() }) -> #{ @return_type() or 'return-type-not-documented' }"
+        if @doc()?
+          text += ('\n' + @doc()).replace /\n/g, '\n  '
+        return text
+
+
+      Math.sqrt.raw_doc = -> '''
+        (value : Number) -> Number
+
+        Square root of a number. If value is a negative number, NaN is returned.
+      '''
 
 
       class @DocumentedObject
@@ -145,8 +189,105 @@ Raw Data:
 - return types & callback signatures
 
 
+
+CoffeeScript implementation
+===========================
+
+
+### Arguments
+
+You can query functions for their arguments:
+
 <code type='text/coffeescript'>
-((a, b) -> a + b).args() == 'a, b'
+( (a, b) -> a + b ).args() == 'a, b'
+</code>
+
+And some functions declare more specific argument usage:
+
+<code type='text/coffeescript'>
+Math.sqrt.args() == 'value : Number'
+</code>
+
+You can declare arguments usage yourself:
+
+<code type='text/coffeescript'>
+( (a, b) ->
+    ''' (a : Number, b : Number) -> Number '''
+    a + b
+).args() == 'a : Number, b : Number'
+</code>
+
+
+### Return type
+
+Default the return type is unknown:
+
+<code type='text/coffeescript'>
+( (a, b) -> a + b ).return_type() == null
+</code>
+
+Some functions have their return type declared:
+
+<code type='text/coffeescript'>
+Math.sqrt.return_type() == 'Number'
+</code>
+
+You can declare return types yourself:
+
+<code type='text/coffeescript'>
+( (a, b) ->
+    ''' (a : Number, b : Number) -> Number '''
+    a + b
+).return_type() == 'Number'
+</code>
+
+Or if you only want to declare the return type:
+
+<code type='text/coffeescript'>
+( (a, b) ->
+    ''' -> Number '''
+    a + b
+).return_type() == 'Number'
+</code>
+
+
+### Inline documentation
+
+Default functions are not documented:
+
+<code type='text/coffeescript'>
+( (a, b) -> a + b ).doc() == null
+</code>
+
+But they can be documented:
+
+<code type='text/coffeescript'>
+( (a, b) ->
+    '''
+      (a : Number, b : Number) -> Number
+      The sum of two numbers. If either a or b is NaN, NaN is returned.
+    '''
+    a + b
+).doc() == 'The sum of two numbers. If either a or b is NaN, NaN is returned.'
+</code>
+
+
+### Inspection
+
+Functions can be inspected:
+
+<code type='text/coffeescript'>
+( (a, b) -> a + b ).inspect() == '(a, b) -> return-type-not-documented'
+</code>
+
+If arguments and return types are declared and inline documentation is added,
+a more detailed inspection is provided:
+
+<code type='text/coffeescript'>
+Math.sqrt.inspect() == '''
+  (value : Number) -> Number
+    Square root of a number. If value is a negative number, NaN is returned.
+'''
 </code>
 
 
@@ -164,7 +305,7 @@ Raw Data:
           var html = showdown.makeHtml(t);
 
           // Remove first empty line of code blocks.
-          html = html.replace( /(<code[^>]*>)\n/ , "$1");
+          html = html.replace( /(<code[^>]*>)\n/g , "$1");
 
           src.innerHTML = html;
         }) 
