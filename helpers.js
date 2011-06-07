@@ -175,7 +175,7 @@ function Node( tagname, attributes, content ) {
   
   if (content) {
     content.forEach( function(node) {
-      if (node.is_a( "String" )) {
+      if (typeof(node) === "string") {
         tag.append( TextNode(node) );
       } else {
         tag.append( node );
