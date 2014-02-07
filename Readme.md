@@ -4,7 +4,9 @@ This is a little experiment on using literate programming to develop runtime ins
 
 ## How to use
 
-Clone this repository. Open index.xhtml in your editor on the left side of the screen, and in your web browser on the right side. 
+Clone this repository. Open index.xhtml in your editor on the left side of the screen, and in your web browser on the right side. Like this.
+
+![Development](Viewme.png)
 
 Edit your thoughts in markdown in the &lt;source&gt; tags. 
 
