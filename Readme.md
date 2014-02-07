@@ -1,4 +1,4 @@
-# A little experiment on Literate Programming and runtime inspection of JavaScript functions and their usage
+# Literate Programming & JS runtime inspection
 
 This is a little experiment on using literate programming to develop runtime inspection in JavaScript. 
 
