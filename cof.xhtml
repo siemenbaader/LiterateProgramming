@@ -236,7 +236,7 @@ CoffeeScript implementation
 You can query functions for their arguments:
 
 <code type='text/coffeescript'>
-( (a, b) -> a + b ).args() == 'a, b'
+( (a, b) -> a + b ).args() == ', b' #error on purpose
 </code>
 
 And some functions declare more specific argument usage:
