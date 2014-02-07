@@ -4,11 +4,11 @@ This is a little experiment on using literate programming to develop runtime ins
 
 ## How to use
 
-Clone ths repository. Open index.xhtml in your editor on the left side of the screen, and in your web browser on the right side. 
+Clone this repository. Open index.xhtml in your editor on the left side of the screen, and in your web browser on the right side. 
 
 Edit your thoughts in markdown in the &lt;source&gt; tags. 
 
-Edit and the example code in &lt;code&gt; sections and watch the unit test go green or red when you reload the browser. 
+Edit the example code in &lt;code&gt; sections. Reload the browser and watch the unit test go green or red. 
 
 Edit the inspection library in the &lt;coffee-script&gt; tag.
 
